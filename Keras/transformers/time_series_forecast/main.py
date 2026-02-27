@@ -167,20 +167,20 @@ def main():
     logdir = os.path.join("logs", datetime.now().strftime("%Y%m%d-%H%M%S"))
     os.makedirs(logdir, exist_ok=True)
     arch_path = os.path.join(logdir, 'model_visualkeras.png')
-    visualkeras.layered_view(
-        model,
-        to_file=arch_path,
-        legend=True,
-        draw_volume=False,
-        scale_xy=1.5,
-        scale_z=1,
-        spacing=20
-    )
+    # visualkeras.layered_view(             #commented out to prevent errors
+    #     model,
+    #     to_file=arch_path,
+    #     legend=True,
+    #     draw_volume=False,
+    #     scale_xy=1.5,
+    #     scale_z=1,
+    #     spacing=20
+    # )
     # Log Visualkeras image to TensorBoard
-    with tf.summary.create_file_writer(logdir).as_default():
-        img = tf.io.read_file(arch_path)
-        img = tf.image.decode_png(img, channels=4)
-        tf.summary.image("Model Visualization", tf.expand_dims(img, 0), step=0)
+    #     with tf.summary.create_file_writer(logdir).as_default():
+    #         img = tf.io.read_file(arch_path)
+    #         img = tf.image.decode_png(img, channels=4)
+    #         tf.summary.image("Model Visualization", tf.expand_dims(img, 0), step=0)
 
     tensorboard_cb = tf.keras.callbacks.TensorBoard(
         log_dir=logdir,

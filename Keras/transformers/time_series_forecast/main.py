@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Complete script to generate synthetic stock price data, build a Transformer-based time series forecasting model,
+Complete script to import stock price data from yfinance, build a Transformer-based time series forecasting model,
 train it with TensorBoard and Visualkeras integration, evaluate its performance, and visualize predictions.
 """
 import os
@@ -14,6 +14,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras import Input
 import matplotlib.pyplot as plt
 import visualkeras
+import yfinance as yf
 
 # Configure TensorFlow to use GPU if available
 gpus = tf.config.list_physical_devices('GPU')
@@ -132,13 +133,21 @@ def build_model(time_step,
 
 
 def main():
-    # 1. Generate synthetic stock price data
-    np.random.seed(42)
-    data_length = 2000
-    trend = np.linspace(100, 200, data_length)
-    noise = np.random.normal(0, 2, data_length)
-    synthetic_data = trend + noise
-    df = pd.DataFrame(synthetic_data, columns=['Close'])
+    # 1. Import stock price data from yfinance
+    # Choose a stock ticker (e.g., 'AAPL', 'GOOGL', 'MSFT', etc.)
+    ticker = 'QQQ'
+    start_date = '2016-01-01'
+    end_date = '2026-01-01'
+    
+    print(f"Downloading {ticker} stock data from {start_date} to {end_date}...")
+    stock_data = yf.download(ticker, start=start_date, end=end_date, progress=False)
+    
+    # Extract the 'Close' prices
+    df = stock_data[['Close']].copy()
+    df = df.dropna()  # Remove any missing values
+    
+    print(f"Downloaded {len(df)} data points")
+    print(f"Price range: ${float(df['Close'].min()):.2f} - ${float(df['Close'].max()):.2f}")
 
     # 2. Normalize data
     scaler = MinMaxScaler(feature_range=(0, 1))

@@ -4,3 +4,4 @@ matplotlib
 visualkeras
 pandas
 scikit-learn
+yfinance
